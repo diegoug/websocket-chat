@@ -1,0 +1,60 @@
+version: "3.7"
+
+services:
+  microservice-dev:
+    container_name: ${MICROSERVICE_HOST}
+    image: microservice-dev
+    build:
+      context: ../../microservice
+      dockerfile: ../docker/build/microservice/Dockerfile
+      target: development
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_HOSTNAME=${POSTGRES_HOST}
+      - POSTGRES_DATABASE_NAME=${POSTGRES_DATABASE_NAME}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    ports:
+      - "${MICROSERVICE_PORT}:${MICROSERVICE_PORT}"
+    volumes:
+      - ../../microservice:/home/app/web
+    networks:
+      microservice_network:
+        aliases:
+          - ${MICROSERVICE_HOST}
+  
+  postgres-microservice-dev:
+    container_name: ${POSTGRES_HOST}
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE_NAME}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - db_data_microservice:/var/lib/postgresql/data
+    networks:
+      microservice_network:
+        aliases:
+          - ${POSTGRES_HOST}
+  
+  redis-dev:
+    container_name: ${REDIS_HOST}
+    image: redis:latest
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    networks:
+      microservice_network:
+        aliases:
+          - ${REDIS_HOST}
+
+networks:
+  microservice_network:
+    driver: bridge
+
+volumes:
+  db_data_microservice:

@@ -1,0 +1,5 @@
+version: '3'
+
+services:
+  microservice-dev:
+    command: tail -f /dev/null
