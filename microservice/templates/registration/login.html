@@ -1,0 +1,41 @@
+<!-- tu_app/templates/registration/login.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/login.css' %}">
+    <style>
+                body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            min-height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-container {
+            padding: 20px;
+            width: auto;
+            margin: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Iniciar Sesión</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Iniciar sesión</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

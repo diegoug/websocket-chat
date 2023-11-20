@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat en Tiempo Real</title>
+    <style>
+        /* Estilos generales para el chat */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+
+        #chat-room {
+            width: 90%;
+            max-width: 550px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+        }
+
+        #chat-log {
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Estilo de los mensajes en el chat */
+        .chat-message {
+            position: relative;
+            padding: 10px;
+            border-radius: 15px;
+            background-color: #e5e5ea;
+            color: black;
+            align-self: flex-start;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        /* Estilos para el input y botón de enviar */
+        #chat-message-input {
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ccc;
+            width: calc(100% - 52px);
+            margin-left: 10px;
+            margin-right: 2px;
+            box-sizing: border-box;
+            border-bottom-left-radius: 8px;
+        }
+
+        #chat-message-submit {
+            width: 75px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px;
+            margin: 0;
+            border-left: 1px solid #ccc;
+            border-bottom-right-radius: 8px;
+        }
+
+        /* Estilos para los botones al pasar el mouse */
+        #chat-message-submit:hover {
+            background-color: #0056b3;
+            cursor: pointer;
+        }
+
+        /* Ajuste de estilos cuando el input y el botón están enfocados */
+        #chat-message-input:focus,
+        #chat-message-submit:focus {
+            outline: none;
+        }
+
+        /* Ajustes para cuando el chat está vacío */
+        #chat-log:empty::before {
+            content: 'No hay mensajes...';
+            color: #bbb;
+            font-style: italic;
+        }
+
+        /* Estilos para mensajes propios */
+        .own-message {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="chat-room">
+        <div id="chat-log"></div>
+        <input id="chat-message-input" type="text" size="100" placeholder="Escribe un mensaje...">
+        <input id="chat-message-submit" type="button" value="Enviar">
+    </div>
+
+    <script>
+        const chatLog = document.getElementById('chat-log');
+        const chatMessageInput = document.getElementById('chat-message-input');
+        const chatMessageSubmit = document.getElementById('chat-message-submit');
+
+        // Crear una conexión WebSocket
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/'
+        );
+
+        // Escuchar mensajes entrantes
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message');
+            messageDiv.innerText = data.message;
+            chatLog.appendChild(messageDiv);
+
+            // Mover el scroll hacia el último mensaje
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+
+        // Manejar errores de WebSocket
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        // Función para enviar mensaje
+        function sendMessage() {
+            const message = chatMessageInput.value.trim();
+            if (message) {
+                chatSocket.send(JSON.stringify({ 'message': message }));
+                chatMessageInput.value = '';
+            }
+        }
+
+        // Evento de clic para enviar mensaje
+        chatMessageSubmit.onclick = sendMessage;
+
+        // Evento de tecla "Enter" para enviar mensaje
+        chatMessageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+    </script>
+</body>
+</html>
