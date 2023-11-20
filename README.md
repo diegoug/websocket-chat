@@ -1,6 +1,6 @@
 # [microservice-name]
 
-[microservice-name] is a microservice oriented to the payment processing of the Elenas platform, focused on handling a large number of transactions
+[microservice-name] is a microservice architecture
 
 ## Dependencies
 To work with [microservice-name] it is necessary to have docker and Compose installed in versions that can work with the YAML compose configuration file in version Tree.
@@ -23,7 +23,7 @@ To work with [microservice-name] it is necessary to have docker and Compose inst
 
 ### Clone the repository
 ```
-$ git clone git@gitlab.com:elenasMujeresPoderosas/[microservice-name].git
+$ git clone git@github.com:diegoug/[microservice-name].git
 $ cd [microservice-name]
 ```
 [Back to Install development enviroment](#install-development-enviroment)
