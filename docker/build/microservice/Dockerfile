@@ -53,7 +53,7 @@ RUN apt-get update
 
 WORKDIR /home/app/web
 
-CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0"]
+CMD ["/usr/local/bin/daphne", "-b", "0.0.0.0", "-p", "8000", "microservice.asgi:application"]
 
 # -----------------------------------------------------------------------------
 # Production image, includes the application files
