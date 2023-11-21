@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "daphne: Django",
+            "name": "Daphne Django",
             "type": "python",
             "request": "launch",
             "program": "/usr/local/bin/daphne",
@@ -18,7 +18,7 @@
             ],
             "justMyCode": false
         },{
-            "name": "Python: Django",
+            "name": "Server Django",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/manage.py",
@@ -28,12 +28,20 @@
                 "--noreload"
             ]
         },{
-            "name": "Python: Django test",
+            "name": "Test Django",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/manage.py",
             "args": [
                 "test"
+            ]
+        },{
+            "name": "Pytest Customers",
+            "type": "python",
+            "request": "launch",
+            "program": "/usr/local/bin/pytest",
+            "args": [
+                "microservice/tests/test_consumers.py"
             ]
         }
     ]
